@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Exceptions;
 
-class XmlStorageException
+use Exception;
+
+class XmlStorageException extends Exception
 {
 
 }

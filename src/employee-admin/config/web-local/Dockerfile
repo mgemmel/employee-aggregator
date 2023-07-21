@@ -17,7 +17,8 @@ WORKDIR /usr/src/emploee-admin
 COPY --from=builder /usr/src/emploee-admin/node_modules ./node_modules
 COPY ./src .
 
-COPY ./src/.env.$env_type ./.env
-COPY ./src/env.json.$env_type ./env.json
+#COPY ./src/.env.$env_type ./.env
+#COPY ./src/env.json.$env_type ./env.json
+EXPOSE 9000
 
 CMD ["npm", "run", "serve"]

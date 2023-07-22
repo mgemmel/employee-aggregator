@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Services\Users;
 
 use App\Enums\users\UserAttributeEnum;
-use App\Models\users\UserAttributeModel;
+use App\Models\users\AttributeModel;
 use InvalidArgumentException;
 
 class UsersAttributesService
@@ -15,7 +15,7 @@ class UsersAttributesService
 
     /**
      * @param array $newAttributes
-     * @return array
+     * @return AttributeModel[]
      */
     public function validateUserAttributes(array $newAttributes): array
     {
@@ -31,7 +31,7 @@ class UsersAttributesService
                 if (!$valid) {
                     throw new InvalidArgumentException($attributeEnum->value . ' is invalid');
                 }
-                $validAttributes[] = new UserAttributeModel($attributeEnum, (string)$value);
+                $validAttributes[] = new AttributeModel($attributeEnum->value, (string)$value);
             }
         }
 
@@ -47,7 +47,7 @@ class UsersAttributesService
         /** @var UserAttributeEnum $attributeEnum */
         foreach (self::REQUIRED_ATTRIBUTES as $attributeEnum) {
             $exists = false;
-            /** @var UserAttributeModel $attribute */
+            /** @var AttributeModel $attribute */
             foreach ($attributes as $attribute) {
                 if ($attribute->getName() == $attributeEnum->value) {
                     $exists = true;

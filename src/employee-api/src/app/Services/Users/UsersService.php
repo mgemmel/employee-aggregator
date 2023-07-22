@@ -48,17 +48,27 @@ class UsersService
      */
     public function deleteUser(int $userId): void
     {
-        $indexToDelete = null;
-        foreach ($this->usersXmlStorage->getUsers() as $key => $user) {
-            if ($user->id == $userId){
-                $indexToDelete = $key;
-                break;
-            }
-        }
-		if (empty($indexToDelete)){
-            throw new InvalidArgumentException('Invalid user id: '. $userId);
-        }
+        [$index] = $this->usersXmlStorage->getUser($userId);
 
-        $this->usersXmlStorage->deleteUser($indexToDelete);
+        $this->usersXmlStorage->deleteUser($index);
+    }
+
+    /**
+     * @param int $userId
+     * @param array $data
+     * @return UserXmlModel
+     * @throws XmlStorageException
+     */
+    public function updateUser(int $userId, array $data): UserXmlModel
+    {
+        $attributes = $this->usersAttributesService->validateUserAttributes($data);
+
+        /** @var UserXmlModel $user */
+        [$index, $user] = $this->usersXmlStorage->getUser($userId);
+
+        $updateUser = $user->update($attributes);
+        $this->usersXmlStorage->saveData();
+
+        return $updateUser;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Services\Xml;
 
 use App\Exceptions\XmlStorageException;
-use App\Models\users\UserAttributeModel;
+use App\Models\users\AttributeModel;
 use App\Models\users\UserXmlModel;
 use SimpleXMLElement;
 
@@ -31,13 +31,28 @@ class UsersXmlStorage extends XmlStorageService
     }
 
     /**
+     * @param int $id
+     * @return array
+     * @throws XmlStorageException
+     */
+    public function getUser(int $id): array
+    {
+        foreach ($this->getUsers() as $key => $user) {
+            if ($user->id == $id){
+                return [$key, $user];
+            }
+        }
+        throw new XmlStorageException('Unable to find model');
+    }
+
+    /**
      * @throws XmlStorageException
      */
     public function saveUserModel(int $id, array $attributes): UserXmlModel
     {
         $user = parent::getData()->addChild('user');
         $user->addAttribute('id', (string)$id);
-        /** @var UserAttributeModel $attribute */
+        /** @var AttributeModel $attribute */
         foreach ($attributes as $attribute) {
             $user->addChild($attribute->getName(), $attribute->getValue());
         }

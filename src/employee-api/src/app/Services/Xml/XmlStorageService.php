@@ -68,7 +68,7 @@ abstract class XmlStorageService
      * @return void
      * @throws XmlStorageException
      */
-    protected function saveData(): void
+    public function saveData(): void
     {
         if (isset($this->simpleXMLElement) && $this->simpleXMLElement->saveXML($this->filePath)) {
             return;

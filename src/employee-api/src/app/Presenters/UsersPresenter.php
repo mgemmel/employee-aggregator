@@ -79,4 +79,16 @@ class UsersPresenter extends Presenter
 
         $this->sendJson([]);
     }
+
+    /**
+     * @throws AbortException
+     * @throws Exception
+     */
+    public function actionUpdateUser(int $id): void
+    {
+        $request = $this->validateRequest('PUT');
+		$user = $this->usersRepository->updateUser($id, $this->getBody($request));
+
+        $this->sendJson($user);
+    }
 }

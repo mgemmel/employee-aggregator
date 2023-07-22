@@ -3,23 +3,15 @@ declare(strict_types=1);
 
 namespace App\Models\users;
 
-use App\Enums\users\UserAttributeEnum;
-
-class UserAttributeModel
+class AttributeModel
 {
-	private string $name;
-    private string $type;
-    private string $value;
 
     /**
-     * @param UserAttributeEnum $attributeEnum
+     * @param string $name
      * @param string $value
      */
-    public function __construct(UserAttributeEnum $attributeEnum, string $value)
+    public function __construct(private readonly string $name, private readonly string $value)
     {
-        $this->name = $attributeEnum->value;
-        $this->type = $attributeEnum->getType();
-        $this->value = $value;
     }
 
     /**
@@ -28,14 +20,6 @@ class UserAttributeModel
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
     }
 
     /**

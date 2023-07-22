@@ -3,22 +3,40 @@
 namespace App\Models\users;
 
 
+use App\Enums\users\UserAttributeEnum;
+use JsonSerializable;
 use SimpleXMLElement;
 
-class UserXmlModel
+/**
+ * @property int $id
+ */
+class UserXmlModel extends AbstractXmlModel implements JsonSerializable
 {
-    readonly int $id;
-    public string $name;
-    public int $age;
 
     /**
      * @param SimpleXMLElement $simpleXMLElement
      */
-    public function __construct(private SimpleXMLElement $simpleXMLElement)
+    public function __construct(public SimpleXMLElement $simpleXMLElement)
     {
-        $this->id = (int)(string)$this->simpleXMLElement['id'];
-        $this->name = $this->simpleXMLElement->name;
-        $this->age = (int)(string)$this->simpleXMLElement->age;
+        parent::__construct($simpleXMLElement);
     }
 
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        $attributes = [];
+        foreach (UserAttributeEnum::cases() as $attributeEnum) {
+            $attributes[] = [
+                'type' => $attributeEnum->value,
+                'value' => (string)$this->{$attributeEnum->value}
+            ];
+        }
+
+        return [
+            'id' => (int)$this->id,
+            'attributes' => $attributes,
+        ];
+    }
 }

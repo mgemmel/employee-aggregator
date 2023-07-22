@@ -38,7 +38,7 @@ class UsersXmlStorage extends XmlStorageService
     public function getUser(int $id): array
     {
         foreach ($this->getUsers() as $key => $user) {
-            if ($user->id == $id){
+            if ($user->id == $id) {
                 return [$key, $user];
             }
         }
@@ -50,15 +50,12 @@ class UsersXmlStorage extends XmlStorageService
      */
     public function saveUserModel(int $id, array $attributes): UserXmlModel
     {
-        $user = parent::getData()->addChild('user');
-        $user->addAttribute('id', (string)$id);
-        /** @var AttributeModel $attribute */
-        foreach ($attributes as $attribute) {
-            $user->addChild($attribute->getName(), $attribute->getValue());
-        }
-        parent::saveData();
+        $user = parent::createXmlElement('user', [new AttributeModel('id', (string)$id)]);
+        $userXmlModel = new UserXmlModel($user);
+        $userXmlModel->update($attributes);
+        $this->saveData();
 
-        return new UserXmlModel($user);
+        return $userXmlModel;
     }
 
     /**

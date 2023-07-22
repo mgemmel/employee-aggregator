@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Services\Users;
 
+use App\Enums\users\Gender;
 use App\Enums\users\UserAttributeEnum;
 use App\Models\users\AttributeModel;
 use InvalidArgumentException;
@@ -15,27 +16,34 @@ class UsersAttributesService
 
     /**
      * @param array $newAttributes
-     * @return AttributeModel[]
+     * @return array
      */
-    public function validateUserAttributes(array $newAttributes): array
+    public function parseAttributes(array $newAttributes): array
     {
-        $validAttributes = [];
-        foreach (UserAttributeEnum::cases() as $attributeEnum) {
-            $value = $newAttributes[$attributeEnum->value] ?? null;
-            if (!is_null($value)) {
-                $valid = match ($attributeEnum->getType()) {
-                    'string' => is_string($value),
-                    'int' => is_integer($value) && $value > 0,
-                    default => false,
-                };
-                if (!$valid) {
-                    throw new InvalidArgumentException($attributeEnum->value . ' is invalid');
-                }
-                $validAttributes[] = new AttributeModel($attributeEnum->value, (string)$value);
-            }
+        $parsedAttributes = [];
+        foreach ($newAttributes as $name => $value) {
+            $parsedAttributes[] = new AttributeModel($name, (string)$value);
         }
 
-        return $validAttributes;
+        return $parsedAttributes;
+    }
+
+    /**
+     * @param AttributeModel[] $attributes
+     * @return void
+     */
+    public function validateAttributes(array $attributes): void
+    {
+        foreach ($attributes as $attribute){
+            $validAttribute = UserAttributeEnum::tryFrom($attribute->getName());
+            if (!$validAttribute){
+                throw new InvalidArgumentException($attribute->getName() . ' is invalid');
+            }
+            $valueIsValid = $validAttribute->valueIsValid($attribute->getValue());
+            if (!$valueIsValid){
+                throw new InvalidArgumentException($attribute->getName() . ' has invalid value');
+            }
+        }
     }
 
     /**

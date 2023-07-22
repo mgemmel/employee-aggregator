@@ -69,4 +69,4 @@
         <name>majko</name>
         <age>100</age>
     </user>
-<user id="1690019861"><name>majko</name><age>15</age></user><user id="1690020249"><name>majkooo</name><age>10</age></user></users>
+<user id="1690019861"><name>majko</name><age>15</age></user><user id="1690020249"><name>majkooo</name><age>10</age><gender>male</gender></user><user id="1690037198"><name>majko</name><age>15</age></user><user id="1690038051"><name>majko</name><age>15</age></user><user id="1690038065"><name>majko</name><age>15</age><gender>female</gender></user><user id="1690040165"><name>majko</name><age>15</age><gender>female</gender></user></users>

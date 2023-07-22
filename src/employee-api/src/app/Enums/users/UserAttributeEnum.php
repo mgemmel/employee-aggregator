@@ -9,13 +9,16 @@ enum UserAttributeEnum: string
     case USER_GENDER = 'gender';
 
     /**
-     * @return string
+     * @param string $value
+     * @return bool
      */
-    public function getType(): string
+    public function valueIsValid(string $value): bool
     {
-        return match ($this->value) {
-            UserAttributeEnum::USER_NAME->value, UserAttributeEnum::USER_GENDER->value => 'string',
-            UserAttributeEnum::USER_AGE->value => 'int',
+        return match ($this->name){
+            UserAttributeEnum::USER_NAME->name => !empty($value),
+            UserAttributeEnum::USER_AGE->name => is_numeric($value) && $value > 0,
+            UserAttributeEnum::USER_GENDER->name => boolval(Gender::tryFrom($value)),
+            default => false
         };
     }
 }

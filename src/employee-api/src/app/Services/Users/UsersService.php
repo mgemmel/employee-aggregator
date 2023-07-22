@@ -6,7 +6,6 @@ namespace App\Services\Users;
 use App\Exceptions\XmlStorageException;
 use App\Models\users\UserXmlModel;
 use App\Services\Xml\UsersXmlStorage;
-use InvalidArgumentException;
 
 class UsersService
 {
@@ -37,7 +36,8 @@ class UsersService
      */
     public function createUser(array $data): UserXmlModel
     {
-        $attributes = $this->usersAttributesService->validateUserAttributes($data);
+        $attributes = $this->usersAttributesService->parseAttributes($data);
+        $this->usersAttributesService->validateAttributes($attributes);
         $this->usersAttributesService->validateRequiredAttributes($attributes);
 
         return $this->usersXmlStorage->saveUserModel(time(), $attributes);
@@ -61,7 +61,8 @@ class UsersService
      */
     public function updateUser(int $userId, array $data): UserXmlModel
     {
-        $attributes = $this->usersAttributesService->validateUserAttributes($data);
+        $attributes = $this->usersAttributesService->parseAttributes($data);
+        $this->usersAttributesService->validateAttributes($attributes);
 
         /** @var UserXmlModel $user */
         [$index, $user] = $this->usersXmlStorage->getUser($userId);

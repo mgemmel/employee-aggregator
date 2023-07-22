@@ -16,18 +16,74 @@ class AbstractXmlModel
     }
 
     /**
-     * Dynamically retrieve attributes on the model.
+     * @param string $propertyName
+     * @return bool
+     */
+    private function hasProperty(string $propertyName): bool
+    {
+        return property_exists($this->simpleXMLElement, $propertyName);
+    }
+
+    /**
+     * @param string $propertyName
+     * @return string
+     */
+    private function getPropertyValue(string $propertyName): string
+    {
+        return (string)$this->simpleXMLElement->{$propertyName};
+    }
+
+    /**
+     * @param string $propertyName
+     * @return SimpleXMLElement
+     */
+    private function getProperty(string $propertyName): SimpleXMLElement
+    {
+        return $this->simpleXMLElement->{$propertyName};
+    }
+
+    /**
+     * @param string $attributeName
+     * @return bool
+     */
+    private function hasAttribute(string $attributeName): bool
+    {
+        return isset($this->simpleXMLElement[$attributeName]);
+    }
+
+    /**
+     * @param string $attributeName
+     * @return string
+     */
+    private function getAttributeValue(string $attributeName): string
+    {
+        return (string)$this->simpleXMLElement[$attributeName];
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return SimpleXMLElement
+     */
+    private function addProperty(string $name, string $value): SimpleXMLElement
+    {
+        return $this->simpleXMLElement->addChild($name, $value);
+    }
+
+
+    /**
+     * Dynamically retrieve attributes and properties on the model.
      *
      * @param string $key
      * @return string
      */
     public function __get(string $key)
     {
-        if (isset($this->simpleXMLElement[$key])) {
-            return (string)$this->simpleXMLElement[$key];
+        if ($this->hasAttribute($key)) {
+            return $this->getAttributeValue($key);
         }
-        if (property_exists($this->simpleXMLElement, $key)) {
-            return (string)$this->simpleXMLElement->{$key};
+        if ($this->hasProperty($key)) {
+            return $this->getPropertyValue($key);
         }
 
         return '';
@@ -40,11 +96,11 @@ class AbstractXmlModel
     public function update(array $attributes): static
     {
         foreach ($attributes as $attribute) {
-            if (property_exists($this->simpleXMLElement, $attribute->getName())) {
-                $xmlAttribute = $this->simpleXMLElement->{$attribute->getName()};
-                $xmlAttribute[0] = $attribute->getValue();
-            }else{
-                //$child = $this->simpleXMLElement->addChild()
+            if ($this->hasProperty($attribute->getName())) {
+                $xmlElement = $this->getProperty($attribute->getName());
+                $xmlElement[0] = $attribute->getValue();
+            } else {
+                $this->addProperty($attribute->getName(), $attribute->getValue());
             }
         }
 

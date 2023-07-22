@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Services\Xml;
 
 use App\Exceptions\XmlStorageException;
+use App\Models\users\AttributeModel;
 use Exception;
 use SimpleXMLElement;
 
@@ -74,5 +75,21 @@ abstract class XmlStorageService
             return;
         }
         throw new XmlStorageException('Unable to save data');
+    }
+
+    /**
+     * @param string $name
+     * @param AttributeModel[] $attributes
+     * @return SimpleXMLElement
+     * @throws XmlStorageException
+     */
+    public function createXmlElement(string $name, array $attributes): SimpleXMLElement
+    {
+        $child =  $this->getData()->addChild($name);
+        foreach ($attributes as $attribute){
+            $child->addAttribute($attribute->getName(), $attribute->getValue());
+        }
+
+        return $child;
     }
 }

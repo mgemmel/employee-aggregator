@@ -15,9 +15,9 @@ class UsersPresenter extends Presenter
 {
 
     /**
-     * @param UsersService $usersRepository
+     * @param UsersService $usersService
      */
-    public function __construct(private UsersService $usersRepository)
+    public function __construct(private readonly UsersService $usersService)
     {
         parent::__construct();
     }
@@ -51,7 +51,7 @@ class UsersPresenter extends Presenter
     public function actionIndex(): void
     {
         $this->validateRequest('GET');
-		$users = $this->usersRepository->getUsers();
+		$users = $this->usersService->getUsers();
 
         $this->sendJson($users);
     }
@@ -63,7 +63,7 @@ class UsersPresenter extends Presenter
     public function actionCreateUser(): void
     {
         $request = $this->validateRequest('POST');
-		$user = $this->usersRepository->createUser($this->getBody($request));
+		$user = $this->usersService->createUser($this->getBody($request));
 
         $this->sendJson($user);
     }
@@ -75,7 +75,7 @@ class UsersPresenter extends Presenter
     public function actionDeleteUser(int $id): void
     {
         $request = $this->validateRequest('DELETE');
-		$this->usersRepository->deleteUser($id);
+		$this->usersService->deleteUser($id);
 
         $this->sendJson([]);
     }
@@ -87,7 +87,7 @@ class UsersPresenter extends Presenter
     public function actionUpdateUser(int $id): void
     {
         $request = $this->validateRequest('PUT');
-		$user = $this->usersRepository->updateUser($id, $this->getBody($request));
+		$user = $this->usersService->updateUser($id, $this->getBody($request));
 
         $this->sendJson($user);
     }

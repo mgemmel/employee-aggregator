@@ -38,17 +38,18 @@ services:
     depends_on:
       - employee-php
 
-  #employee-admin:
-  #  build:
-  #    context: ./src/employee-admin
-  #    dockerfile: ./config/web-local/Dockerfile
-  #    args:
-  #      env_type: "local"
-  #  container_name: EmployeeAdmin
-  #  volumes:
-  #    - ./src/employee-admin/src:/usr/src/employee-admin
-  #    - /usr/src/employee-admin/node_modules
-  #  networks:
-  #    - employee-aggregator
-  #  ports:
-  #    - "8009:9000"
+  employee-admin:
+    user: 1000:1000
+    build:
+      context: ./src/employee-admin
+      dockerfile: ./config/web-local/Dockerfile
+      args:
+        env_type: "local"
+    container_name: EmployeeAdmin
+    volumes:
+      - ./src/employee-admin/src:/usr/src/employee-admin
+      - /usr/src/employee-admin/node_modules
+    networks:
+      - employee-aggregator
+    ports:
+      - "8081:9000"

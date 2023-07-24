@@ -18,6 +18,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY ./src ./
 
+RUN chmod -R 777 ./log
+RUN chmod -R 777 ./temp
+
 RUN composer install
 
 EXPOSE 9000

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Exceptions\MethodNotAllowedException;
+use InvalidArgumentException;
 use Nette;
+use Nette\Application\BadRequestException;
 use Nette\Application\Responses;
 use Nette\Http;
 use Tracy\ILogger;
@@ -16,6 +19,7 @@ final class ErrorPresenter implements Nette\Application\IPresenter
 
 	public function __construct(
 		private ILogger $logger,
+        private Http\Response $response
 	) {
 	}
 
@@ -23,18 +27,21 @@ final class ErrorPresenter implements Nette\Application\IPresenter
 	public function run(Nette\Application\Request $request): Nette\Application\Response
 	{
 		$exception = $request->getParameter('exception');
+        $response = [
+            'error' => 'Internal server error'
+        ];
 
-		if ($exception instanceof Nette\Application\BadRequestException) {
-			[$module, , $sep] = Nette\Application\Helpers::splitName($request->getPresenterName());
-			return new Responses\ForwardResponse($request->setPresenterName($module . $sep . 'Error4xx'));
-		}
+        if ($exception instanceof InvalidArgumentException ||
+            $exception instanceof BadRequestException ||
+            $exception instanceof MethodNotAllowedException
+        ){
+            $this->response->setCode(400);
+            $response['error'] = $exception->getMessage();
+            return new Responses\JsonResponse($response);
+        }
 
-		$this->logger->log($exception, ILogger::EXCEPTION);
-        return new Responses\JsonResponse(['error' => '500']);
-		/*return new Responses\CallbackResponse(function (Http\IRequest $httpRequest, Http\IResponse $httpResponse): void {
-			if (preg_match('#^text/html(?:;|$)#', (string) $httpResponse->getHeader('Content-Type'))) {
-				require __DIR__ . '/templates/Error/500.phtml';
-			}
-		});*/
+        $this->response->setCode(500);
+
+        return new Responses\JsonResponse($response);
 	}
 }

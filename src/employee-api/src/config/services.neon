@@ -8,3 +8,7 @@ search:
 
 services:
 	- App\Router\RouterFactory::createRouter
+	- App\Services\Users\EmployeesService
+	- App\Presenters\EmployeesPresenter
+	- App\Services\Xml\EmployeesXmlStorage
+	- App\Services\Users\EmployeesAttributesService

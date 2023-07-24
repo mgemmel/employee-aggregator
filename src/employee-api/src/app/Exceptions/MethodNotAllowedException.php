@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class MethodNotAllowedException
+class MethodNotAllowedException extends \Exception
 {
 
 }

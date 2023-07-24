@@ -1,3 +1,38 @@
 <?xml version="1.0"?>
 <employees>
-<employee id="1690178169"><name>majkooo</name><age>10</age><gender>male</gender></employee></employees>
+    <employee id="1690197590">
+        <name>Peter</name>
+        <age>25</age>
+        <gender>male</gender>
+    </employee>
+    <employee id="1690197615">
+        <name>Eva</name>
+        <age>20</age>
+        <gender>female</gender>
+    </employee>
+    <employee id="1690197625">
+        <name>Erika</name>
+        <age>34</age>
+        <gender>female</gender>
+    </employee>
+    <employee id="1690197635">
+        <name>Marian</name>
+        <age>29</age>
+        <gender>male</gender>
+    </employee>
+    <employee id="1690197644">
+        <name>Viera</name>
+        <age>40</age>
+        <gender>female</gender>
+    </employee>
+    <employee id="1690197657">
+        <name>Dominik</name>
+        <age>35</age>
+        <gender>male</gender>
+    </employee>
+    <employee id="1690197677">
+        <name>Andrej</name>
+        <age>60</age>
+        <gender>male</gender>
+    </employee>
+</employees>

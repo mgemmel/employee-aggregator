@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
+use App\Exceptions\MethodNotAllowedException;
 use App\Services\Users\EmployeesAttributesService;
 use App\Services\Users\EmployeesService;
 use Exception;
@@ -34,7 +35,7 @@ class EmployeesPresenter extends Presenter
     {
         $request = $this->getHttpRequest();
         if (!$request->isMethod($method)) {
-            throw new \HttpRequestMethodException();
+            throw new MethodNotAllowedException('Method ' . $request->getMethod() . ' is not allowed');
         }
         return $request;
     }
@@ -56,7 +57,7 @@ class EmployeesPresenter extends Presenter
     public function actionIndex(): void
     {
         $this->validateRequest('GET');
-		$users = $this->usersService->getEmployees();
+        $users = $this->usersService->getEmployees();
 
         $this->sendJson($users);
     }
@@ -68,7 +69,7 @@ class EmployeesPresenter extends Presenter
     public function actionCreateEmployee(): void
     {
         $request = $this->validateRequest('POST');
-		$user = $this->usersService->createEmployee($this->getBody($request));
+        $user = $this->usersService->createEmployee($this->getBody($request));
 
         $this->sendJson($user);
     }
@@ -80,7 +81,7 @@ class EmployeesPresenter extends Presenter
     public function actionDeleteEmployee(int $id): void
     {
         $request = $this->validateRequest('DELETE');
-		$this->usersService->deleteEmployee($id);
+        $this->usersService->deleteEmployee($id);
 
         $this->sendJson([]);
     }
@@ -92,7 +93,7 @@ class EmployeesPresenter extends Presenter
     public function actionUpdateEmployee(int $id): void
     {
         $request = $this->validateRequest('PUT');
-		$user = $this->usersService->updateUser($id, $this->getBody($request));
+        $user = $this->usersService->updateUser($id, $this->getBody($request));
 
         $this->sendJson($user);
     }
@@ -104,7 +105,7 @@ class EmployeesPresenter extends Presenter
     public function actionGetAttributesConfig(): void
     {
         $this->validateRequest('GET');
-		$config = $this->usersAttributesService->getAttributesConfig();
+        $config = $this->usersAttributesService->getAttributesConfig();
 
         $this->sendJson($config);
     }

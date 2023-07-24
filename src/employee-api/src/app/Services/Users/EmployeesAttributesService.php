@@ -3,16 +3,12 @@ declare(strict_types=1);
 
 namespace App\Services\Users;
 
-use App\Enums\users\Gender;
-use App\Enums\users\UserAttributeEnum;
+use App\Enums\users\EmployeeAttributeEnum;
 use App\Models\users\AttributeModel;
 use InvalidArgumentException;
 
-class UsersAttributesService
+class EmployeesAttributesService
 {
-    const REQUIRED_ATTRIBUTES = [
-        UserAttributeEnum::USER_NAME
-    ];
 
     /**
      * @param array $newAttributes
@@ -34,13 +30,13 @@ class UsersAttributesService
      */
     public function validateAttributes(array $attributes): void
     {
-        foreach ($attributes as $attribute){
-            $validAttribute = UserAttributeEnum::tryFrom($attribute->getName());
-            if (!$validAttribute){
+        foreach ($attributes as $attribute) {
+            $validAttribute = EmployeeAttributeEnum::tryFrom($attribute->getName());
+            if (!$validAttribute) {
                 throw new InvalidArgumentException($attribute->getName() . ' is invalid');
             }
             $valueIsValid = $validAttribute->valueIsValid($attribute->getValue());
-            if (!$valueIsValid){
+            if (!$valueIsValid) {
                 throw new InvalidArgumentException($attribute->getName() . ' has invalid value');
             }
         }
@@ -52,18 +48,33 @@ class UsersAttributesService
      */
     public function validateRequiredAttributes(array $attributes): void
     {
-        /** @var UserAttributeEnum $attributeEnum */
-        foreach (self::REQUIRED_ATTRIBUTES as $attributeEnum) {
+        foreach (EmployeeAttributeEnum::cases() as $attributeEnum) {
+            if (!$attributeEnum->isRequired()){
+                continue;
+            }
             $exists = false;
             /** @var AttributeModel $attribute */
             foreach ($attributes as $attribute) {
                 if ($attribute->getName() == $attributeEnum->value) {
                     $exists = true;
+                    break;
                 }
             }
             if (!$exists) {
-                throw new \InvalidArgumentException('Argument ' . $attributeEnum->value . ' is required');
+                throw new InvalidArgumentException('Argument ' . $attributeEnum->value . ' is required');
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributesConfig(): array
+    {
+        return array_map(fn(EmployeeAttributeEnum $attributeEnum) => [
+            'name' => $attributeEnum->value,
+            'type' => $attributeEnum->getType(),
+            'required' => $attributeEnum->isRequired()
+        ], EmployeeAttributeEnum::cases());
     }
 }

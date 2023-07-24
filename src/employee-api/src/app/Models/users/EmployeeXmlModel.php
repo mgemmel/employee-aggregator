@@ -3,14 +3,14 @@
 namespace App\Models\users;
 
 
-use App\Enums\users\UserAttributeEnum;
+use App\Enums\users\EmployeeAttributeEnum;
 use JsonSerializable;
 use SimpleXMLElement;
 
 /**
  * @property int $id
  */
-class UserXmlModel extends AbstractXmlModel implements JsonSerializable
+class EmployeeXmlModel extends AbstractXmlModel implements JsonSerializable
 {
 
     /**
@@ -27,7 +27,7 @@ class UserXmlModel extends AbstractXmlModel implements JsonSerializable
     public function jsonSerialize(): array
     {
         $attributes = [];
-        foreach (UserAttributeEnum::cases() as $attributeEnum) {
+        foreach (EmployeeAttributeEnum::cases() as $attributeEnum) {
             $attributes[] = [
                 'type' => $attributeEnum->value,
                 'value' => (string)$this->{$attributeEnum->value}

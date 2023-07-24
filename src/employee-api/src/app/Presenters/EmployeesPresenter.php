@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
-use App\Services\Users\UsersService;
+use App\Services\Users\EmployeesAttributesService;
+use App\Services\Users\EmployeesService;
 use Exception;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Presenter;
@@ -11,13 +12,17 @@ use Nette\Http\IRequest;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
-class UsersPresenter extends Presenter
+class EmployeesPresenter extends Presenter
 {
 
     /**
-     * @param UsersService $usersService
+     * @param EmployeesService $usersService
+     * @param EmployeesAttributesService $usersAttributesService
      */
-    public function __construct(private readonly UsersService $usersService)
+    public function __construct(
+        private readonly EmployeesService           $usersService,
+        private readonly EmployeesAttributesService $usersAttributesService
+    )
     {
         parent::__construct();
     }
@@ -51,7 +56,7 @@ class UsersPresenter extends Presenter
     public function actionIndex(): void
     {
         $this->validateRequest('GET');
-		$users = $this->usersService->getUsers();
+		$users = $this->usersService->getEmployees();
 
         $this->sendJson($users);
     }
@@ -60,10 +65,10 @@ class UsersPresenter extends Presenter
      * @throws AbortException
      * @throws Exception
      */
-    public function actionCreateUser(): void
+    public function actionCreateEmployee(): void
     {
         $request = $this->validateRequest('POST');
-		$user = $this->usersService->createUser($this->getBody($request));
+		$user = $this->usersService->createEmployee($this->getBody($request));
 
         $this->sendJson($user);
     }
@@ -72,10 +77,10 @@ class UsersPresenter extends Presenter
      * @throws AbortException
      * @throws Exception
      */
-    public function actionDeleteUser(int $id): void
+    public function actionDeleteEmployee(int $id): void
     {
         $request = $this->validateRequest('DELETE');
-		$this->usersService->deleteUser($id);
+		$this->usersService->deleteEmployee($id);
 
         $this->sendJson([]);
     }
@@ -84,11 +89,23 @@ class UsersPresenter extends Presenter
      * @throws AbortException
      * @throws Exception
      */
-    public function actionUpdateUser(int $id): void
+    public function actionUpdateEmployee(int $id): void
     {
         $request = $this->validateRequest('PUT');
 		$user = $this->usersService->updateUser($id, $this->getBody($request));
 
         $this->sendJson($user);
+    }
+
+    /**
+     * @throws AbortException
+     * @throws Exception
+     */
+    public function actionGetAttributesConfig(): void
+    {
+        $this->validateRequest('GET');
+		$config = $this->usersAttributesService->getAttributesConfig();
+
+        $this->sendJson($config);
     }
 }

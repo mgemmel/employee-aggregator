@@ -12,3 +12,7 @@ services:
 	- App\Presenters\EmployeesPresenter
 	- App\Services\Xml\EmployeesXmlStorage
 	- App\Services\Users\EmployeesAttributesService
+
+http:
+	headers:
+		Access-Control-Allow-Origin: '*'

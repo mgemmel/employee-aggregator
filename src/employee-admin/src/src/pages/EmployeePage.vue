@@ -36,13 +36,13 @@
     <q-dialog v-model="addEmployeeDialog" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <q-avatar icon="person_add" color="primary" text-color="white"/>
-          <span class="q-ml-sm text-h6">{{ isEditDialog ? 'Edit employee' : 'New employee' }}</span>
-          <q-btn icon="close" flat round dense v-close-popup/>
+          <q-avatar class="q-ma-sm" icon="person_add" color="primary" text-color="white"/>
+          <span class="q-ma-sm text-h6">{{ isEditDialog ? 'Edit employee' : 'New employee' }}</span>
+          <q-btn class="q-ma-sm" icon="close" flat round dense v-close-popup/>
         </q-card-section>
         <q-card-section class="row items-center">
           <q-form
-            class="q-gutter-md"
+            class="q-gutter-md col"
             @submit="saveUser"
           >
             <template v-for="(attribute, idx) in attributes" :key="idx">
